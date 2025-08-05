@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* PineApple Muzic - Dark Music-Themed Design System
+   All colors MUST be HSL for proper theming.
+*/
+
+@layer base {
+  :root {
+    /* Main Background - Deep Dark for Music Apps */
+    --background: 220 15% 8%;
+    --foreground: 0 0% 95%;
+
+    /* Cards - Slightly Lighter Dark */
+    --card: 220 15% 10%;
+    --card-foreground: 0 0% 95%;
+
+    /* Popovers */
+    --popover: 220 15% 12%;
+    --popover-foreground: 0 0% 95%;
+
+    /* Primary - Purple/Blue Music Theme */
+    --primary: 260 70% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 260 70% 65%;
+
+    /* Secondary - Darker Accent */
+    --secondary: 220 15% 15%;
+    --secondary-foreground: 0 0% 90%;
+
+    /* Muted Elements */
+    --muted: 220 10% 14%;
+    --muted-foreground: 0 0% 60%;
+
+    /* Accent - Pink/Purple for Music Vibes */
+    --accent: 320 65% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders and Inputs */
+    --border: 220 10% 20%;
+    --input: 220 10% 16%;
+    --ring: 260 70% 55%;
+
+    /* Enhanced Gradients for Music App */
+    --gradient-primary: linear-gradient(135deg, hsl(260 70% 55%), hsl(280 65% 60%));
+    --gradient-accent: linear-gradient(135deg, hsl(320 65% 60%), hsl(340 70% 65%));
+    --gradient-subtle: linear-gradient(135deg, hsl(220 15% 15%), hsl(240 20% 18%));
+    --gradient-card: linear-gradient(135deg, hsl(220 15% 10%) 0%, hsl(240 15% 12%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(280 70% 50%), hsl(320 70% 55%));
+    --gradient-dark: linear-gradient(180deg, hsl(220 15% 8%), hsl(220 15% 12%));
+    --gradient-card: linear-gradient(145deg, hsl(220 15% 10%), hsl(220 15% 14%));
+
+    /* Shadows with Glow Effects */
+    --shadow-glow: 0 0 30px hsl(120 100% 35% / 0.3);
+    --shadow-accent-glow: 0 0 40px hsl(280 70% 50% / 0.2);
+    --shadow-card: 0 4px 20px hsl(220 15% 5% / 0.8);
+
+    /* Smooth Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --radius: 0.75rem;
+
+    /* Sidebar - Ultra Dark */
+    --sidebar-background: 220 20% 6%;
+    --sidebar-foreground: 0 0% 85%;
+    --sidebar-primary: 120 100% 35%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 15% 12%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 220 15% 15%;
+    --sidebar-ring: 120 100% 45%;
+  }
+
+  .dark {
+    /* Force Dark Mode - Same as Root for Consistent Dark Theme */
+    --background: 220 15% 8%;
+    --foreground: 0 0% 95%;
+    --card: 220 15% 10%;
+    --card-foreground: 0 0% 95%;
+    --popover: 220 15% 12%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 120 100% 35%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 15% 15%;
+    --secondary-foreground: 0 0% 90%;
+    --muted: 220 10% 14%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 280 70% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 10% 20%;
+    --input: 220 10% 16%;
+    --ring: 120 100% 35%;
+    --sidebar-background: 220 20% 6%;
+    --sidebar-foreground: 0 0% 85%;
+    --sidebar-primary: 120 100% 35%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 15% 12%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 220 15% 15%;
+    --sidebar-ring: 120 100% 45%;
+  }
+}
+
+/* Global Animation Classes for Futuristic Effects */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-20px) rotate(90deg); }
+  50% { transform: translateY(-40px) rotate(180deg); }
+  75% { transform: translateY(-20px) rotate(270deg); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes slide-across {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+  
+  /* Custom scrollbar for futuristic look */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gradient-primary rounded-full;
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.5);
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary-glow;
+    box-shadow: 0 0 15px hsl(var(--primary) / 0.8);
+  }
+}
