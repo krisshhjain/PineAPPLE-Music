@@ -1,73 +1,139 @@
-# Welcome to your Lovable project
+# PineApple Muzic 🍍🎵
 
-## Project info
+A modern, responsive music streaming application built with React, TypeScript, and Tailwind CSS. PineApple Muzic offers a Spotify-like experience with artist profiles, album browsing, search functionality, and an integrated music player.
 
-**URL**: https://lovable.dev/projects/c4c9f1db-b0c8-489c-aadd-747fd4218684
+## 🚀 Features
 
-## How can I edit this code?
+- **Artist Profiles**: Browse detailed artist pages with albums, songs, and related artists
+- **Search Functionality**: Search for artists, albums, and songs with real-time results
+- **Music Player**: Integrated bottom player with playback controls
+- **Responsive Design**: Works seamlessly across desktop and mobile devices
+- **Modern UI**: Clean, dark-themed interface with purple/pink accent colors
+- **Album Browsing**: Explore artist discographies and album details
+- **Music Discovery**: Browse by genres and discover new music
 
-There are several ways of editing your application.
+## 🛠️ Technologies Used
 
-**Use Lovable**
+This project is built with modern web technologies:
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/c4c9f1db-b0c8-489c-aadd-747fd4218684) and start prompting.
+- **React 18** - Component-based UI framework
+- **TypeScript** - Type-safe JavaScript
+- **Vite** - Fast build tool and development server
+- **Tailwind CSS** - Utility-first CSS framework
+- **shadcn/ui** - Modern React component library
+- **React Router DOM** - Client-side routing
+- **Lucide React** - Beautiful icons
 
-Changes made via Lovable will be committed automatically to this repo.
+## 📋 Prerequisites
 
-**Use your preferred IDE**
+Before running this project, make sure you have:
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **Node.js** (version 16 or higher) - [Download here](https://nodejs.org/)
+- **npm** or **yarn** package manager
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🏃‍♂️ Getting Started
 
-Follow these steps:
+Follow these steps to get PineApple Muzic running on your local machine:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+### 1. Clone the repository
+```bash
+git clone https://github.com/krisshhjain/PineAPPLE-Music.git
+cd PineAPPLE-Music
 ```
 
-**Edit a file directly in GitHub**
+### 2. Install dependencies
+```bash
+npm install
+# or
+yarn install
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### 3. Start the development server
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-**Use GitHub Codespaces**
+### 4. Open your browser
+Navigate to `http://localhost:5173` to view the application.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🎯 Available Scripts
 
-## What technologies are used for this project?
+- `npm run dev` - Start development server with hot reload
+- `npm run build` - Build the project for production
+- `npm run preview` - Preview the production build locally
+- `npm run lint` - Run ESLint to check code quality
 
-This project is built with:
+## 📁 Project Structure
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```
+src/
+├── components/          # Reusable UI components
+│   ├── ui/             # shadcn/ui components
+│   ├── AppSidebar.tsx  # Navigation sidebar
+│   └── MusicPlayer.tsx # Bottom music player
+├── pages/              # Page components
+│   ├── Home.tsx        # Homepage with featured content
+│   ├── Search.tsx      # Search functionality
+│   ├── Artist.tsx      # Artist profile page
+│   ├── Album.tsx       # Album details page
+│   └── Library.tsx     # User library
+├── data/               # Data and mock content
+│   └── musicData.ts    # Fictionalized artist and music data
+├── assets/             # Static assets
+│   └── Artists/        # Artist images
+├── hooks/              # Custom React hooks
+├── lib/                # Utility functions
+└── App.tsx             # Main app component
+```
 
-## How can I deploy this project?
+## 🎨 Customization
 
-Simply open [Lovable](https://lovable.dev/projects/c4c9f1db-b0c8-489c-aadd-747fd4218684) and click on Share -> Publish.
+### Theme Colors
+The app uses a purple/pink color scheme. You can customize colors in:
+- `tailwind.config.ts` - Main color configuration
+- CSS custom properties in component files
 
-## Can I connect a custom domain to my Lovable project?
+### Adding New Artists/Music
+Update the `src/data/musicData.ts` file to add new:
+- Artists with their profiles and images
+- Albums with track listings
+- Songs with metadata
 
-Yes, you can!
+## 🌟 Key Features Explained
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Artist Pages
+- Click on any artist to view their dedicated profile page
+- Browse their complete discography
+- See related artists and recommendations
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Search System
+- Real-time search across artists, albums, and songs
+- Tabbed interface for different content types
+- Recent searches for quick access
+
+### Music Player
+- Bottom-mounted player (Spotify-style)
+- Play/pause controls and progress tracking
+- Currently playing song information
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 👨‍💻 Author
+
+Created by [krisshhjain](https://github.com/krisshhjain)
+
+---
+
+**Note**: This is a demo application with fictionalized artist data for showcase purposes. No real music files are streamed in this application.
