@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, Search, Library, Plus, Heart, Clock, Music, Mic2, Volume2, Download } from "lucide-react";
+import { Home, Search, Library, Plus, Heart, Clock, Music, Compass, User, Sliders, Radio, Sparkles, TrendingUp } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -17,13 +17,20 @@ import { Button } from "@/components/ui/button";
 const mainItems = [
   { title: "Home", url: "/", icon: Home },
   { title: "Search", url: "/search", icon: Search },
-  { title: "Your Library", url: "/library", icon: Library },
+  { title: "Explore", url: "/explore", icon: Compass },
 ];
 
 const libraryItems = [
-  { title: "Create Playlist", url: "/create-playlist", icon: Plus },
+  { title: "Your Library", url: "/library", icon: Library },
   { title: "Liked Songs", url: "/playlist/liked-songs", icon: Heart },
   { title: "Recently Played", url: "/recently-played", icon: Clock },
+  { title: "Create Playlist", url: "/create-playlist", icon: Plus },
+];
+
+const experienceItems = [
+  { title: "Now Playing", url: "/now-playing", icon: Radio },
+  { title: "Equalizer", url: "/equalizer", icon: Sliders },
+  { title: "Profile", url: "/profile", icon: User },
 ];
 
 const playlists = [
@@ -35,12 +42,14 @@ const playlists = [
   { id: "focus-flow", name: "Focus Flow", tracks: 42 },
   { id: "night-drive", name: "Night Drive", tracks: 35 },
   { id: "synthwave-classics", name: "Synthwave Classics", tracks: 55 },
-  { id: "future-bass-mix", name: "Future Bass Mix", tracks: 40 },
-  { id: "ambient-dreams", name: "Ambient Dreams", tracks: 28 },
-  { id: "cyber-punk", name: "Cyber Punk", tracks: 33 },
-  { id: "retrowave-nights", name: "Retrowave Nights", tracks: 47 },
-  { id: "deep-house-vibes", name: "Deep House Vibes", tracks: 52 },
   { id: "lo-fi-beats", name: "Lo-Fi Beats", tracks: 60 },
+];
+
+const moodFilters = [
+  { emoji: "🔥", label: "Energy", color: "from-orange-500/20 to-red-500/20" },
+  { emoji: "😌", label: "Chill", color: "from-blue-500/20 to-cyan-500/20" },
+  { emoji: "💜", label: "Vibes", color: "from-purple-500/20 to-pink-500/20" },
+  { emoji: "🎯", label: "Focus", color: "from-green-500/20 to-emerald-500/20" },
 ];
 
 export function AppSidebar() {
@@ -48,53 +57,58 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const location = useLocation();
   const currentPath = location.pathname;
+  const [selectedMood, setSelectedMood] = useState<string | null>(null);
 
-  const isActive = (path: string) => currentPath === path;
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
-    isActive ? "bg-muted/20 text-primary font-medium border-l-2 border-primary glow-border" : "hover:bg-muted/10 hover:text-primary";
+    isActive
+      ? "bg-primary/10 text-primary font-medium relative before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-[3px] before:h-5 before:bg-primary before:rounded-full"
+      : "text-muted-foreground hover:bg-white/5 hover:text-foreground transition-all duration-200";
 
   return (
-    <Sidebar className={`${collapsed ? "w-14" : "w-64"} bg-sidebar backdrop-blur-xl border-r border-sidebar-border/50 shadow-xl h-screen`}>
-      <SidebarContent className="p-4 relative h-full flex flex-col">
-        {/* Background effects */}
-        <div className="absolute inset-0 bg-gradient-to-b from-sidebar/80 via-sidebar to-sidebar/90 pointer-events-none"></div>
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-primary opacity-80"></div>
+    <Sidebar className={`${collapsed ? "w-16" : "w-[260px]"} h-screen border-r-0`}>
+      <SidebarContent className="relative h-full flex flex-col bg-transparent">
+        {/* Glassmorphism background */}
+        <div className="absolute inset-0 glass-strong rounded-none border-r border-white/5 pointer-events-none" />
         
+        {/* Gradient accent line */}
+        <div className="absolute top-0 right-0 w-[1px] h-full bg-gradient-to-b from-primary/30 via-transparent to-primary/10 pointer-events-none" />
+
         {/* Logo */}
-        <div className="mb-6 relative z-10 flex-shrink-0">
-          <div className="flex items-center gap-3">
+        <div className="relative z-10 px-4 pt-5 pb-3 flex-shrink-0">
+          <NavLink to="/" className="flex items-center gap-2.5 group">
             <div className="relative">
-              <img 
-                src="/PineAppke-noBG.png" 
-                alt="PineApple Muzic" 
-                className="w-17 h-17 object-contain"
+              <img
+                src="/PineAppke-noBG.png"
+                alt="PineApple Muzic"
+                className="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-300"
               />
             </div>
             {!collapsed && (
-              <div className="relative">
-                <h1 className="text-xl font-bold text-foreground">
-                  PineApple Muzic
+              <div>
+                <h1 className="text-base font-bold text-foreground tracking-tight">
+                  PineApple <span className="text-gradient-primary">Muzic</span>
                 </h1>
-                <div className="text-xs text-sidebar-foreground/60 font-medium mt-0.5">
+                <p className="text-[10px] text-muted-foreground font-medium tracking-wider uppercase">
                   Sonic Universe
-                </div>
+                </p>
               </div>
             )}
-          </div>
+          </NavLink>
         </div>
 
-        {/* Scrollable content area */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden relative z-10 space-y-6">
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden relative z-10 px-2 space-y-1">
+          
           {/* Main Navigation */}
           <SidebarGroup>
             <SidebarGroupContent>
-              <SidebarMenu className="space-y-1">
+              <SidebarMenu className="space-y-0.5">
                 {mainItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
                       <NavLink to={item.url} end className={getNavCls}>
-                        <item.icon className="w-5 h-5" />
-                        {!collapsed && <span className="ml-3">{item.title}</span>}
+                        <item.icon className="w-[18px] h-[18px]" />
+                        {!collapsed && <span className="ml-3 text-sm">{item.title}</span>}
                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -103,16 +117,24 @@ export function AppSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
 
-          {/* Library Section */}
+          {/* Divider */}
+          <div className="h-px bg-white/5 mx-2" />
+
+          {/* Library */}
           <SidebarGroup>
+            {!collapsed && (
+              <SidebarGroupLabel className="text-[10px] text-muted-foreground/60 font-semibold uppercase tracking-widest px-3 mb-1">
+                Library
+              </SidebarGroupLabel>
+            )}
             <SidebarGroupContent>
-              <SidebarMenu className="space-y-1">
+              <SidebarMenu className="space-y-0.5">
                 {libraryItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
                       <NavLink to={item.url} className={getNavCls}>
-                        <item.icon className="w-5 h-5" />
-                        {!collapsed && <span className="ml-3">{item.title}</span>}
+                        <item.icon className="w-[18px] h-[18px]" />
+                        {!collapsed && <span className="ml-3 text-sm">{item.title}</span>}
                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -121,45 +143,109 @@ export function AppSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
 
+          {/* Divider */}
+          <div className="h-px bg-white/5 mx-2" />
+
+          {/* Experience */}
+          <SidebarGroup>
+            {!collapsed && (
+              <SidebarGroupLabel className="text-[10px] text-muted-foreground/60 font-semibold uppercase tracking-widest px-3 mb-1">
+                Experience
+              </SidebarGroupLabel>
+            )}
+            <SidebarGroupContent>
+              <SidebarMenu className="space-y-0.5">
+                {experienceItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <NavLink to={item.url} className={getNavCls}>
+                        <item.icon className="w-[18px] h-[18px]" />
+                        {!collapsed && <span className="ml-3 text-sm">{item.title}</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+
+          {/* Mood Quick Filters */}
+          {!collapsed && (
+            <>
+              <div className="h-px bg-white/5 mx-2" />
+              <div className="px-3 py-2">
+                <p className="text-[10px] text-muted-foreground/60 font-semibold uppercase tracking-widest mb-2">Mood</p>
+                <div className="grid grid-cols-4 gap-1.5">
+                  {moodFilters.map((mood) => (
+                    <button
+                      key={mood.label}
+                      onClick={() => setSelectedMood(selectedMood === mood.label ? null : mood.label)}
+                      className={`flex flex-col items-center gap-0.5 p-2 rounded-lg transition-all duration-200 ${
+                        selectedMood === mood.label
+                         ? `bg-gradient-to-b ${mood.color} ring-1 ring-primary/30 scale-105`
+                          : 'hover:bg-white/5'
+                      }`}
+                    >
+                      <span className="text-base">{mood.emoji}</span>
+                      <span className="text-[9px] text-muted-foreground">{mood.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
           {/* Playlists */}
           {!collapsed && (
-            <SidebarGroup>
-              <SidebarGroupLabel className="text-muted-foreground text-sm font-medium mb-3">
-                Made for You
-              </SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu className="space-y-1">
-                  {playlists.map((playlist) => (
-                    <SidebarMenuItem key={playlist.id}>
-                      <SidebarMenuButton asChild>
-                        <NavLink 
-                          to={`/playlist/${playlist.id}`} 
-                          className="group hover:bg-muted/10 hover:text-primary transition-all duration-200"
-                        >
-                          <div className="w-10 h-10 bg-gradient-subtle rounded-md flex items-center justify-center mr-3">
-                            <Music className="w-4 h-4 text-foreground/70" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium truncate">{playlist.name}</p>
-                            <p className="text-xs text-muted-foreground">{playlist.tracks} songs</p>
-                          </div>
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
+            <>
+              <div className="h-px bg-white/5 mx-2" />
+              <SidebarGroup>
+                <SidebarGroupLabel className="text-[10px] text-muted-foreground/60 font-semibold uppercase tracking-widest px-3 mb-1">
+                  Playlists
+                </SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu className="space-y-0.5">
+                    {playlists.map((playlist) => (
+                      <SidebarMenuItem key={playlist.id}>
+                        <SidebarMenuButton asChild>
+                          <NavLink
+                            to={`/playlist/${playlist.id}`}
+                            className="group flex items-center gap-3 px-3 py-1.5 text-muted-foreground hover:bg-white/5 hover:text-foreground transition-all duration-200 rounded-lg"
+                          >
+                            <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/10 transition-colors">
+                              <Music className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-xs font-medium truncate">{playlist.name}</p>
+                              <p className="text-[10px] text-muted-foreground/60">{playlist.tracks} songs</p>
+                            </div>
+                          </NavLink>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            </>
           )}
         </div>
 
-        {/* Install App - Fixed at bottom */}
+        {/* Profile Section at bottom */}
         {!collapsed && (
-          <div className="flex-shrink-0 pt-4 border-t border-border/30 relative z-10">
-            <Button variant="secondary" className="w-full justify-start bg-muted/20 backdrop-blur-sm border border-border/30 hover:bg-muted/30">
-              <Download className="w-4 h-4 mr-2" />
-              Install App
-            </Button>
+          <div className="relative z-10 flex-shrink-0 p-3 border-t border-white/5">
+            <NavLink
+              to="/profile"
+              className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-all group"
+            >
+              <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center text-white text-xs font-bold shadow-glow">
+                K
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-semibold truncate">Krish</p>
+                <p className="text-[10px] text-muted-foreground">Free Plan</p>
+              </div>
+              <Sparkles className="w-3.5 h-3.5 text-primary/60 group-hover:text-primary transition-colors" />
+            </NavLink>
           </div>
         )}
       </SidebarContent>

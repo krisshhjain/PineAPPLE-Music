@@ -1,63 +1,70 @@
 import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Play, Heart, MoreHorizontal, Share, Download, Clock, Shuffle } from 'lucide-react';
-import { getAlbumById } from '@/data/musicData';
+import { Play, Heart, MoreHorizontal, Share, Download, Clock, Shuffle, Disc } from 'lucide-react';
+import { getAlbumById, artists } from '@/data/musicData';
 
 export default function Album() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const album = id ? getAlbumById(id) : null;
 
   if (!album) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-[60vh]">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-4">Album Not Found</h1>
-          <Link to="/" className="text-purple-400 hover:text-purple-300">
-            Go back home
-          </Link>
+          <h1 className="text-2xl font-bold mb-4">Album Not Found</h1>
+          <Link to="/" className="text-primary hover:underline">Go back home</Link>
         </div>
       </div>
     );
   }
 
-  const totalDuration = album.songs.length * 3.5; // Estimate
+  const totalDuration = album.songs.length * 3.5;
   const formatDuration = (minutes: number) => {
     const hrs = Math.floor(minutes / 60);
     const mins = Math.floor(minutes % 60);
     return hrs > 0 ? `${hrs} hr ${mins} min` : `${mins} min`;
   };
 
+  // Get other albums by same artist
+  const sameArtist = artists.find(a => a.id === album.artistId);
+  const otherAlbums = sameArtist?.albums.filter(a => a.id !== album.id) || [];
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-900/20 to-black text-white">
-      {/* Album Header */}
+    <div className="min-h-screen">
+      {/* Album Header with gradient background */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-600/50 to-transparent" />
-        <div className="relative px-6 pt-16 pb-8">
-          <div className="flex items-end gap-6">
+        {/* Blurred background */}
+        <div className="absolute inset-0 h-80 overflow-hidden">
+          <img src={album.cover} alt="" className="w-full h-full object-cover scale-110 blur-[60px] opacity-30" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/30 to-background" />
+        </div>
+
+        <div className="relative px-8 pt-12 pb-8">
+          <div className="flex items-end gap-7">
             <img
               src={album.cover}
               alt={album.title}
-              className="w-64 h-64 rounded-lg shadow-2xl object-cover"
+              className="w-56 h-56 rounded-2xl object-cover shadow-2xl border border-white/10"
             />
-            <div className="flex-1 pb-4">
-              <Badge variant="secondary" className="mb-2 bg-purple-600 hover:bg-purple-700">
-                Album
-              </Badge>
-              <h1 className="text-6xl font-bold mb-4">{album.title}</h1>
-              <div className="flex items-center gap-2 text-gray-300 text-lg">
-                <Link 
+            <div className="flex-1 pb-2">
+              <Badge className="bg-primary/20 text-primary border-0 text-xs mb-2">Album</Badge>
+              <h1 className="text-5xl font-bold mb-3 tracking-tight">{album.title}</h1>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Link
                   to={`/artist/${album.artistId}`}
-                  className="hover:text-white hover:underline font-semibold"
+                  className="hover:text-foreground hover:underline font-semibold text-foreground"
                 >
                   {album.artist}
                 </Link>
                 <span>•</span>
                 <span>{album.year}</span>
                 <span>•</span>
-                <span>{album.songs.length} songs,</span>
-                <span className="text-gray-400">{formatDuration(totalDuration)}</span>
+                <span>{album.songs.length} songs</span>
+                <span>•</span>
+                <span>{formatDuration(totalDuration)}</span>
               </div>
             </div>
           </div>
@@ -65,106 +72,63 @@ export default function Album() {
       </div>
 
       {/* Controls */}
-      <div className="px-6 py-6 bg-gradient-to-b from-black/50 to-black">
-        <div className="flex items-center gap-4">
-          <Button size="lg" className="rounded-full w-14 h-14 bg-purple-500 hover:bg-purple-600">
-            <Play className="w-6 h-6 fill-current" />
-          </Button>
-          <Button size="lg" variant="outline" className="rounded-full w-14 h-14 border-gray-600 hover:border-white">
-            <Shuffle className="w-6 h-6" />
-          </Button>
-          <Button size="lg" variant="ghost" className="rounded-full w-14 h-14 hover:bg-gray-800">
-            <Heart className="w-6 h-6" />
-          </Button>
-          <Button size="lg" variant="ghost" className="rounded-full w-14 h-14 hover:bg-gray-800">
-            <Download className="w-6 h-6" />
-          </Button>
-          <Button size="lg" variant="ghost" className="rounded-full w-14 h-14 hover:bg-gray-800">
-            <MoreHorizontal className="w-6 h-6" />
-          </Button>
-          <Button size="lg" variant="ghost" className="rounded-full w-14 h-14 hover:bg-gray-800">
-            <Share className="w-6 h-6" />
-          </Button>
-        </div>
+      <div className="px-8 py-4 flex items-center gap-3">
+        <Button className="rounded-full w-12 h-12 bg-white hover:bg-white/90 text-black shadow-lg hover:scale-105 transition-transform">
+          <Play className="w-5 h-5 ml-0.5" />
+        </Button>
+        <Button variant="ghost" className="rounded-full w-11 h-11 text-muted-foreground hover:text-foreground">
+          <Shuffle className="w-5 h-5" />
+        </Button>
+        <Button variant="ghost" className="rounded-full w-11 h-11 text-muted-foreground hover:text-foreground">
+          <Heart className="w-5 h-5" />
+        </Button>
+        <Button variant="ghost" className="rounded-full w-11 h-11 text-muted-foreground hover:text-foreground">
+          <Download className="w-5 h-5" />
+        </Button>
+        <Button variant="ghost" className="rounded-full w-11 h-11 text-muted-foreground hover:text-foreground">
+          <MoreHorizontal className="w-5 h-5" />
+        </Button>
       </div>
 
-      <div className="px-6 pb-8">
+      <div className="px-8 pb-12 space-y-12">
         {/* Track List */}
         <section>
-          <div className="grid grid-cols-12 gap-4 px-4 py-2 text-sm text-gray-400 border-b border-gray-800 mb-4">
-            <div className="col-span-1">#</div>
-            <div className="col-span-6">Title</div>
-            <div className="col-span-3">Album</div>
-            <div className="col-span-1">
-              <Clock className="w-4 h-4" />
-            </div>
-            <div className="col-span-1"></div>
+          <div className="flex items-center gap-4 px-4 py-2 text-[10px] text-muted-foreground uppercase tracking-widest border-b border-white/5 mb-2">
+            <div className="w-8 text-center">#</div>
+            <div className="flex-1">Title</div>
+            <div className="w-20 hidden md:block">Album</div>
+            <div className="w-12 text-right"><Clock className="w-3.5 h-3.5 inline" /></div>
+            <div className="w-16"></div>
           </div>
-          
-          <div className="space-y-1">
+
+          <div className="space-y-0.5 stagger-children">
             {album.songs.map((song, index) => (
               <div
                 key={song.id}
-                className="group grid grid-cols-12 gap-4 p-4 rounded-lg hover:bg-gray-800/50 cursor-pointer items-center"
+                className="group flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/5 cursor-pointer transition-all track-row"
               >
-                <div className="col-span-1 flex items-center justify-center">
-                  <span className="text-gray-400 group-hover:hidden text-sm">{index + 1}</span>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="hidden group-hover:flex w-8 h-8 rounded-full p-0 bg-purple-500 hover:bg-purple-600"
-                  >
-                    <Play className="w-4 h-4 fill-current" />
+                <div className="w-8 text-center">
+                  <span className="text-sm text-muted-foreground group-hover:hidden">{index + 1}</span>
+                  <Button size="sm" variant="ghost" className="hidden group-hover:flex w-8 h-8 p-0 rounded-full bg-white/10 hover:bg-white/20">
+                    <Play className="w-3.5 h-3.5 ml-0.5" />
                   </Button>
                 </div>
-                
-                <div className="col-span-6 flex items-center gap-4">
-                  <img
-                    src={album.cover}
-                    alt={song.title}
-                    className="w-12 h-12 rounded object-cover"
-                  />
-                  <div>
-                    <h3 className="font-medium group-hover:text-white">{song.title}</h3>
-                    <Link 
-                      to={`/artist/${album.artistId}`}
-                      className="text-sm text-gray-400 hover:text-white hover:underline"
-                    >
-                      {album.artist}
-                    </Link>
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <img src={album.cover} alt={song.title} className="w-10 h-10 rounded-lg object-cover" />
+                  <div className="min-w-0">
+                    <h3 className="text-sm font-medium truncate group-hover:text-primary transition-colors">{song.title}</h3>
+                    <Link to={`/artist/${album.artistId}`} className="text-xs text-muted-foreground hover:underline">{album.artist}</Link>
                   </div>
                 </div>
-                
-                <div className="col-span-3">
-                  <Link 
-                    to={`/album/${album.id}`}
-                    className="text-sm text-gray-400 hover:text-white hover:underline"
-                  >
-                    {album.title}
-                  </Link>
+                <div className="w-20 hidden md:block">
+                  <span className="text-xs text-muted-foreground truncate">{album.title}</span>
                 </div>
-                
-                <div className="col-span-1 text-sm text-gray-400">
+                <div className="w-12 text-right text-xs text-muted-foreground">
                   {Math.floor(Math.random() * 2) + 3}:{Math.floor(Math.random() * 60).toString().padStart(2, '0')}
                 </div>
-                
-                <div className="col-span-1 flex items-center justify-center">
-                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="w-8 h-8 rounded-full p-0"
-                    >
-                      <Heart className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="w-8 h-8 rounded-full p-0"
-                    >
-                      <MoreHorizontal className="w-4 h-4" />
-                    </Button>
-                  </div>
+                <div className="w-16 flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button size="sm" variant="ghost" className="w-7 h-7 p-0"><Heart className="w-3.5 h-3.5" /></Button>
+                  <Button size="sm" variant="ghost" className="w-7 h-7 p-0"><MoreHorizontal className="w-3.5 h-3.5" /></Button>
                 </div>
               </div>
             ))}
@@ -172,34 +136,23 @@ export default function Album() {
         </section>
 
         {/* Album Info */}
-        <section className="mt-12">
-          <div className="bg-gradient-to-r from-purple-900/20 to-pink-900/20 rounded-2xl p-6">
+        <section>
+          <div className="glass neon-border rounded-2xl p-6">
             <div className="flex items-start gap-6">
-              <img
-                src={album.cover}
-                alt={album.title}
-                className="w-32 h-32 rounded-lg object-cover"
-              />
+              <img src={album.cover} alt={album.title} className="w-28 h-28 rounded-xl object-cover flex-shrink-0" />
               <div>
-                <h3 className="text-xl font-bold mb-2">{album.title}</h3>
-                <p className="text-purple-400 mb-4">
+                <h3 className="text-lg font-bold mb-1">{album.title}</h3>
+                <p className="text-sm text-primary mb-3">
                   by <Link to={`/artist/${album.artistId}`} className="hover:underline">{album.artist}</Link>
                 </p>
-                <p className="text-gray-300 leading-relaxed mb-4">
-                  Released in {album.year}, "{album.title}" showcases {album.artist}'s artistic growth and 
-                  musical evolution. This album features {album.songs.length} carefully crafted tracks that 
-                  blend various musical elements to create a cohesive and engaging listening experience.
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                  Released in {album.year}, "{album.title}" features {album.songs.length} tracks
+                  that showcase {album.artist}'s artistic growth and musical evolution.
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="outline" className="border-purple-500 text-purple-400">
-                    {album.year}
-                  </Badge>
-                  <Badge variant="outline" className="border-purple-500 text-purple-400">
-                    {album.songs.length} tracks
-                  </Badge>
-                  <Badge variant="outline" className="border-purple-500 text-purple-400">
-                    {formatDuration(totalDuration)}
-                  </Badge>
+                  <Badge variant="outline" className="border-primary/30 text-primary text-xs">{album.year}</Badge>
+                  <Badge variant="outline" className="border-primary/30 text-primary text-xs">{album.songs.length} tracks</Badge>
+                  <Badge variant="outline" className="border-primary/30 text-primary text-xs">{formatDuration(totalDuration)}</Badge>
                 </div>
               </div>
             </div>
@@ -207,18 +160,25 @@ export default function Album() {
         </section>
 
         {/* More by Artist */}
-        <section className="mt-12">
-          <h2 className="text-2xl font-bold mb-6">More by {album.artist}</h2>
-          <div className="text-center py-8">
-            <Link 
-              to={`/artist/${album.artistId}`}
-              className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 font-semibold"
-            >
-              View {album.artist}'s profile
-              <Play className="w-4 h-4" />
-            </Link>
-          </div>
-        </section>
+        {otherAlbums.length > 0 && (
+          <section>
+            <h2 className="text-lg font-semibold mb-4">More by {album.artist}</h2>
+            <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4">
+              {otherAlbums.map((a) => (
+                <Link key={a.id} to={`/album/${a.id}`} className="flex-shrink-0 w-40 group">
+                  <div className="relative mb-2">
+                    <img src={a.cover} alt={a.title} className="w-40 h-40 rounded-xl object-cover group-hover:shadow-neon transition-shadow" />
+                    <Button size="sm" className="absolute bottom-2 right-2 rounded-full w-9 h-9 bg-white/90 text-black opacity-0 group-hover:opacity-100 transition-all shadow-lg">
+                      <Play className="w-3.5 h-3.5 ml-0.5" />
+                    </Button>
+                  </div>
+                  <h3 className="text-xs font-semibold truncate">{a.title}</h3>
+                  <p className="text-[10px] text-muted-foreground">{a.year}</p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );
